@@ -1,11 +1,19 @@
 
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import './App.css'
+import { Signup } from './pages/SignUp'
+import { SignIn } from './pages/SignIn'
+import { HomePage } from './pages/Home'
 
 function App() {
   return (
-    <div>
-      <h1 className="text-3xl font-bold underline">Yash Sherla</h1>
-    </div>
+    <BrowserRouter>
+        <Routes>
+          <Route path="/sign-up" element={<Signup />} />
+          <Route path="/sign-in" element={<SignIn />} />
+          <Route path="/" element={<HomePage />} />
+        </Routes>
+      </BrowserRouter>
   )
 }
 

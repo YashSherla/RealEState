@@ -16,14 +16,14 @@ const signinSchema = z.object({
 })
 router.post('/signup',async (req, res) => {
     const body = signupSchema.safeParse(req.body);
-    const hashedPassword = bcryptjs.hashSync(body.data.password, 10);
    try {
     if (!body.success) {
         return res.status(400).json({
             success: false,
-            message: "Invalid data",
+            message: "Email already taken / Incorrect inputs",
         })
     }
+    const hashedPassword = bcryptjs.hashSync(body.data.password, 10);
     await User.create({
         username: body.data.username,
         email: body.data.email,
@@ -47,7 +47,7 @@ router.post('/signin', async (req, res) => {
     if (!body.success) {
         return res.status(400).json({
             success: false,
-            message: "Invalid data",
+            message: "Incorrect inputs",
         })
     }
     const user = await User.findOne({ email: body.data.email });
@@ -61,7 +61,7 @@ router.post('/signin', async (req, res) => {
     const token  = jwt.sign({ id: user._id },password);
     console.log(token);
     const {password:pass,...others} = user._doc;
-    return res.cookie("access_token", token, { httpOnly: true }).status(200).json({
+    return res.cookie("access_token", token, { httpOnly: true  }).status(200).json({
         success: true,
         message: "User logged in successfully",
         user: others
