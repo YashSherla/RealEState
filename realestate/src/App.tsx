@@ -4,16 +4,21 @@ import './App.css'
 import { Signup } from './pages/SignUp'
 import { SignIn } from './pages/SignIn'
 import { HomePage } from './pages/Home'
+import { RecoilRoot } from 'recoil'
+import { Profile } from './pages/Profile'
 
 function App() {
   return (
-    <BrowserRouter>
+    <RecoilRoot>
+      <BrowserRouter>
         <Routes>
           <Route path="/sign-up" element={<Signup />} />
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/" element={<HomePage />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
       </BrowserRouter>
+    </RecoilRoot>
   )
 }
 

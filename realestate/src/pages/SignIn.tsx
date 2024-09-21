@@ -13,7 +13,7 @@ export const SignIn = ()=>{
    const handleSummit = async () => {
     try {
         setLoading(true);
-        const res = await axios.post('http://localhost:5000/auth/signin', fromdata);
+        const res = await axios.post('http://localhost:3000/auth/signin', fromdata);
         console.log(res.data);
         
         if (res.data.success === false) {
@@ -21,7 +21,8 @@ export const SignIn = ()=>{
         } else {
             setLoading(false);
             setError(null); 
-            navigate('/');
+            localStorage.setItem("access_token", res.data.token);
+            navigate('/?id='+res.data.user._id);
         }
     } catch (error: any) {
         if (error.response && error.response.data) {

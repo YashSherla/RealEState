@@ -13,7 +13,7 @@ export const Signup = ()=>{
    const handleSummit =async ()=>{
     try {
         setLoading(true);
-        const res = await axios.post('http://localhost:5000/auth/signup', fromdata);
+        const res = await axios.post('http://localhost:3000/auth/signup', fromdata);
         console.log(res.data);
         if (res.data.success === false) {
             setError(res.data.message);
