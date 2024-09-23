@@ -1,11 +1,12 @@
 const express = require('express');
 const verifyToken = require('../middelware/verifyToken');
+const bcryptjs = require('bcryptjs');
 const { User, Listing } = require('../db/db');
 const  z  = require('zod');
 const router = express.Router();
 const updateBody = z.object({
     username: z.string().optional(),
-    email: z.string().optional(),
+    email: z.string().email().optional(),
     password: z.string().min(6).optional(),
     avatar: z.string().optional(),
 })
@@ -24,7 +25,16 @@ router.post('/update/:id',verifyToken, async (req, res) => {
                 message: "Invalid data",
             })
         }
-        const update = await User.updateOne(req.params.id, body.data, { new: true });
+        if (body.data.password) {
+            body.data.password = bcryptjs.hashSync(body.data.password, 10);
+        }
+        const update = await User.findByIdAndUpdate(req.params.id,body.data,{new: true});
+        if (!update) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found",
+            })
+        }
         const {password:pass,...others} = update._doc;
         return res.status(200).json({
             success: true,

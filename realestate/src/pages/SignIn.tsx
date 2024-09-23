@@ -1,11 +1,14 @@
 import axios from "axios";
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
+import {  useSetRecoilState } from "recoil";
+import { userAtom } from "../store/userAtom";
 
 export const SignIn = ()=>{
    const [fromdata, setFormData] = useState({})
    const [error, setError] = useState(null);
    const [loading, setLoading] = useState(false);
+   const  setStoreData = useSetRecoilState(userAtom);
    const navigate = useNavigate();
    const handleChange = (e:any)=>{
     setFormData({...fromdata, [e.target.id]: e.target.value})
@@ -22,7 +25,8 @@ export const SignIn = ()=>{
             setLoading(false);
             setError(null); 
             localStorage.setItem("access_token", res.data.token);
-            navigate('/?id='+res.data.user._id);
+            setStoreData(res.data.user);
+            navigate('/');
         }
     } catch (error: any) {
         if (error.response && error.response.data) {

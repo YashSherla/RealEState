@@ -1,6 +1,10 @@
 import axios from "axios";
-import { atomFamily, selectorFamily } from "recoil";
-
+import { atom, atomFamily, selectorFamily } from "recoil";
+import { UserProfile } from "../types/types";
+export const userAtom = atom<UserProfile | null>({
+    key: "userAtom",
+    default: null
+})
 export const getUserAtom = atomFamily({
     key: "getUserAtom",
     default: selectorFamily({
