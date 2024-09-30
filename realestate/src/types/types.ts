@@ -7,3 +7,19 @@ export interface UserProfile {
     updatedAt: string;
     __v: number;
 }
+
+export interface ListingForm {
+    imageUrls: string[];
+    name: string;
+    description: string;
+    address: string;
+    type: 'rent' | 'sale';
+    bedrooms: number;
+    bathrooms: number;
+    regularPrice: number;
+    discountPrice: number;
+    offer: boolean;
+    parking: boolean;
+    furnished: boolean;
+}
+

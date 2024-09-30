@@ -25,6 +25,8 @@ export const SignIn = ()=>{
             setLoading(false);
             setError(null); 
             localStorage.setItem("access_token", res.data.token);
+            localStorage.setItem("user_data", JSON.stringify(res.data.user));
+            console.log('This is signed in user:', res.data.user);
             setStoreData(res.data.user);
             navigate('/');
         }
@@ -37,7 +39,12 @@ export const SignIn = ()=>{
         setLoading(false); 
     }
 };
-
+    useEffect(() => {
+        const token = localStorage.getItem("access_token");
+        if (token) {
+            navigate('/');
+        }
+    }, [setStoreData]);
     return (
         <div className="p-3 max-w-lg mx-auto">
             <h1 className='text-3xl text-center font-semibold my-7'>Sign In</h1>

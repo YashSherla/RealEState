@@ -2,7 +2,7 @@ import { useRecoilValue } from "recoil";
 import { userAtom } from "../store/userAtom";
 import {  useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export const Profile = ()=>{
     const currentuser = useRecoilValue(userAtom);
@@ -37,6 +37,7 @@ export const Profile = ()=>{
     };
     const handleSignout = ()=>{
         localStorage.removeItem("access_token");
+        localStorage.removeItem("user_data");
         window.location.reload();
         navigate('/sign-in');
     }
@@ -54,6 +55,7 @@ export const Profile = ()=>{
                 setError(null);
                 alert(res.data.message);
                 localStorage.removeItem("access_token");
+                localStorage.removeItem("user_data");
                 window.location.reload();
                 navigate('/sign-up');
             }
@@ -99,7 +101,7 @@ export const Profile = ()=>{
                 id="password"
                 onChange={handleonChange}/>
                 <button className="border-2 border-gray-300 p-2 w-full rounded-md bg-blue-950 text-white" onClick={handleSubmit}>UPDATE</button>
-                <button className="border-2 border-gray-300 p-2 w-full rounded-md bg-green-600 text-white">CREATE LISTING</button>
+                <Link className='border-2 border-gray-300 p-2 w-full rounded-md bg-green-600 text-white hover:opacity-95 text-center' to={'/create-listing'}>CREATE LISTING</Link>
                 </div>
             {/* </form> */}
             <div className="flex justify-between mt-5">
@@ -110,6 +112,7 @@ export const Profile = ()=>{
             <p className='text-green-700 mt-5'>
                 {updateSuccess ? 'User is updated successfully!' : ''}
             </p>
+            
             <button className='text-green-700 w-full'> Show Listings</button>
         </div>
     )

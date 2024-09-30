@@ -2,17 +2,11 @@ import { Link } from "react-router-dom";
 import { Search } from "./Search";
 import { userAtom } from "../store/userAtom";
 import { useRecoilValue } from "recoil";
-import { useEffect } from "react";
 import { UserProfile } from "../types/types";
 
 
 export const Navbar = () => {
     const userProfile = useRecoilValue<UserProfile|null>(userAtom);
-
-    useEffect(() => {
-        console.log(userProfile);
-    }, [userProfile]);
-    
     return (
         <header className='bg-slate-200 shadow-md'>
             <div className='flex justify-between items-center max-w-6xl mx-auto p-3'>
@@ -32,7 +26,7 @@ export const Navbar = () => {
                             About
                         </li>
                     </Link >
-                    {/* {userProfile ? (
+                    {userProfile ? (
                         <Link to='/profile'>
                             <img
                                 className='rounded-full h-7 w-7 object-cover'
@@ -44,18 +38,7 @@ export const Navbar = () => {
                         <Link to='/sign-in'>
                             <li className='text-slate-700 hover:underline'>Sign in</li>
                         </Link>
-                    )} */}
-                    <Link to='/profile'>
-                        {userProfile ? (
-                        <img
-                            className='rounded-full h-7 w-7 object-cover'
-                            src={userProfile.avatar}
-                            alt='profile'
-                        />
-                        ) : (
-                        <li className=' text-slate-700 hover:underline'> Sign in</li>
-                        )}
-                    </Link>
+                    )}
                 </ul>
             </div>
         </header>

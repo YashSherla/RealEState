@@ -12,7 +12,7 @@ const listingSchema = z.object({
     bathrooms: z.number(),
     bedrooms: z.number(),
     furnished: z.boolean(),
-    parking: z.boolean(),
+    parking: z.boolean(), 
     type: z.string(),
     offer: z.boolean(),
     imageUrls: z.array(z.string()),
