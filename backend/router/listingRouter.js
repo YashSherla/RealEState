@@ -7,14 +7,14 @@ const listingSchema = z.object({
     name: z.string(),
     description: z.string(),
     address: z.string(),
+    type: z.string(),
+    bedrooms: z.number(),
+    bathrooms: z.number(),
     regularPrice: z.number(),
     discountPrice: z.number(),
-    bathrooms: z.number(),
-    bedrooms: z.number(),
-    furnished: z.boolean(),
-    parking: z.boolean(), 
-    type: z.string(),
     offer: z.boolean(),
+    parking: z.boolean(), 
+    furnished: z.boolean(),
     imageUrls: z.array(z.string()),
     userRef: z.string(),
 })
@@ -35,6 +35,7 @@ const listingSchema = z.object({
 // })
 router.post('/create',async (req, res) => {
     const body = listingSchema.safeParse(req.body);
+    console.log(req.body);
     try {
         if (!body.success) {
             return res.status(400).json({
@@ -42,10 +43,11 @@ router.post('/create',async (req, res) => {
                 message: "Invalid data",
             })
         }
-        await Listing.create(body.data);
+      const listing =  await Listing.create(body.data);
         return res.status(200).json({
             success: true,
             message: "Listing created successfully",
+            data: listing,
         })
     } catch (error) {
         return res.status(500).json({

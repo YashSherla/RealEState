@@ -12,14 +12,11 @@ export const getUserAtom = atomFamily({
         key: "getUserSelector",
         get: (id: string) => async () => {
             try {
-                const res = await axios.get("http://localhost:3000/user/"+id, {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-                    },
-                });
+                const res = await axios.get("http://localhost:3000/listing/get/"+id);
                 return res.data.data;
             } catch (error) {
                 console.log(error);
+                return null;
             }
         },
     })

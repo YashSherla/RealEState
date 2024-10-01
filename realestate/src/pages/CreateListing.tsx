@@ -1,12 +1,18 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import { app } from "../firebase";
 import axios from "axios";
-import { set } from "firebase/database";
+import { useRecoilValue } from "recoil";
+import { userAtom } from "../store/userAtom";
+import { useNavigate } from "react-router-dom";
 export const CreateListing = () => { 
     const [uploading , setUploading] = useState(false);
+    const [loading , setLoading] = useState(false);
+    const [error , setError] = useState("");
     const [files, setFiles] = useState([]);
     const [imageUploadError, setImageUploadError] = useState("");
+    const userProfile = useRecoilValue(userAtom);
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         imageUrls: [],
         name: '',
@@ -21,6 +27,15 @@ export const CreateListing = () => {
         parking: false,
         furnished: false,
     });
+    const handleRemoveImage = (index: number) => {
+        // const newFiles = [...formData.imageUrls];
+        // const newFormData = { ...formData, imageUrls: newFiles.filter((_, i) => i !== index) };
+        // console.log(newFormData);
+        setFormData({
+            ...formData,
+            imageUrls:formData.imageUrls.filter((_, i) => i !== index),
+        })
+    }
     const handleImageSubmit = () =>{
         try {
             if (files.length > 0 && files.length + formData.imageUrls.length < 7) {
@@ -64,10 +79,27 @@ export const CreateListing = () => {
         })
         })
     }
-    const handleSubmit = ()=>{
-        console.log(formData);
-        const res = axios.post('http://localhost:3000/listing/create', formData);
-        console.log(res);
+    const handleSubmit =async ()=>{
+        try {
+            if (formData.imageUrls.length < 1)
+                return setError('Please upload at least one image');
+            // if (+formData.regularPrice < +formData.discountPrice)
+            //     return setError('Discount price should be less than regular price');
+            setLoading(true);
+            const res = await axios.post('http://localhost:3000/listing/create', {...formData, userRef: userProfile?._id});
+            console.log(res.data);
+            if (res.data.success === false) {
+                setError(res.data.message);
+                setLoading(false);
+            }
+            setLoading(false);
+            setError("");
+            navigate(`/listing/${res.data.data._id}`);
+            
+        } catch (error:any) {
+            setError(error);
+            setLoading(false);
+        }
     }
 
     const handleChange = (e:any)=>{
@@ -199,6 +231,16 @@ export const CreateListing = () => {
                             <p>($ / Month)</p>
                         </div>
                     </div>
+                    {
+                    formData.offer && (
+                        <div className="flex gap-2">
+                            <input type="text" className="w-1/2 bg-slate-100 border-2 border-slate-200 rounded-lg px-4 py-2 focus:outline-none focus:border-slate-400" placeholder="Price" id="price" />
+                            <div className="flex flex-col">
+                                <h1>Discounted Price</h1>
+                                <p>($ / Month)</p>
+                            </div>
+                        </div> )
+                    }
                 </div>
                 <div className="col-span-6 flex flex-col gap-3">
                     <div className="flex">
@@ -210,9 +252,34 @@ export const CreateListing = () => {
                             {uploading ? 'Uploading...' : 'Upload'}
                         </button>
                     </div>
-                    <p className="text-red-500">{imageUploadError}</p>
                     <div>
-                        <button className="border-2 border-gray-300 p-2 w-full rounded-md bg-blue-950 text-white" onClick={handleSubmit} >CREATE LISTING</button>
+                        {formData.imageUrls.map((url, index) => (
+                            <div key={index} className='flex justify-between p-3 border items-center'>
+                             <img
+                               src={url}
+                               alt='listing image'
+                               className='w-20 h-20 object-contain rounded-lg'
+                             />
+                             <button
+                               type='button'
+                               onClick={() => handleRemoveImage(index)}
+                               className='p-3 text-red-700 rounded-lg uppercase hover:opacity-75'
+                             >
+                               Delete
+                             </button>
+                           </div>
+                        ))}
+                    </div>
+                    <div>
+                        <p className="text-red-500">{imageUploadError}</p>
+                    </div>
+                    <div>
+                        <button className="border-2 border-gray-300 p-2 w-full rounded-md bg-blue-950 text-white" onClick={handleSubmit} >
+                            {loading ? 'Creating...' : 'Create Listing'}
+                        </button>
+                    </div>
+                    <div>
+                        <p className="text-red-500">{error}</p>
                     </div>
                 </div>
             </div>

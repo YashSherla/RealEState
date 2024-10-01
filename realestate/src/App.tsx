@@ -11,6 +11,7 @@ import { About } from './pages/About'
 import { userAtom } from './store/userAtom'
 import { useEffect, useState } from 'react'
 import { CreateListing } from './pages/CreateListing'
+import { Listing } from './pages/Listing'
 
 const AppwithState = () =>{
  const setStoreProfile  = useSetRecoilState(userAtom);
@@ -34,6 +35,7 @@ const AppwithState = () =>{
           <Route path="/about" element={<About />} />
           <Route path="/profile" element={loading ? null : (userProfile ? <Profile /> : <Navigate to="/sign-in" />)} />
           <Route path="/create-listing" element={<CreateListing />} />
+          <Route path="/listing/:id" element={<Listing />} />
         </Routes>
       </div>
 }
