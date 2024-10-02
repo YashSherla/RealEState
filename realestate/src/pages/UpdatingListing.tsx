@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
 import { app } from "../firebase";
 import axios from "axios";
-import { useRecoilValue } from "recoil";
-import { userAtom } from "../store/userAtom";
-import { useNavigate } from "react-router-dom";
-export const CreateListing = () => { 
+import { useRecoilValue, useRecoilValueLoadable } from "recoil";
+import { getListingAtomFamily, userAtom } from "../store/userAtom";
+import { useNavigate, useParams } from "react-router-dom";
+export const UpdatingListing = () => {
+    const params = useParams();
+    const listingValue = useRecoilValueLoadable(getListingAtomFamily(params.id as string));
     const [uploading , setUploading] = useState(false);
     const [loading , setLoading] = useState(false);
     const [error , setError] = useState("");
@@ -27,6 +29,25 @@ export const CreateListing = () => {
         parking: false,
         furnished: false,
     });
+    useEffect(() => {
+        if (listingValue.state === 'hasValue') {
+            const listing = listingValue.contents;
+            setFormData({
+                imageUrls: listing.imageUrls,
+                name: listing.name,
+                description: listing.description,
+                address: listing.address,
+                type: listing.type,
+                bedrooms: listing.bedrooms,
+                bathrooms: listing.bathrooms,
+                regularPrice: listing.regularPrice,
+                discountPrice: listing.discountPrice,
+                offer: listing.offer,
+                parking: listing.parking,
+                furnished: listing.furnished,
+            })
+        }
+    }, [listingValue])
     const handleRemoveImage = (index: number) => {
         // const newFiles = [...formData.imageUrls];
         // const newFormData = { ...formData, imageUrls: newFiles.filter((_, i) => i !== index) };
@@ -86,7 +107,11 @@ export const CreateListing = () => {
             // if (+formData.regularPrice < +formData.discountPrice)
             //     return setError('Discount price should be less than regular price');
             setLoading(true);
-            const res = await axios.post('http://localhost:3000/listing/create', {...formData, userRef: userProfile?._id});
+            const res = await axios.post(`http://localhost:3000/listing/update/${params.id}`, {...formData, userRef: userProfile?._id},{
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+                }
+            });
             console.log(res.data);
             if (res.data.success === false) {
                 setError(res.data.message);
@@ -116,7 +141,7 @@ export const CreateListing = () => {
    
     return (
         <div className="text-center mt-4">
-            <h1 className="text-3xl font-semibold">CREATE A LISTING</h1>
+            <h1 className="text-3xl font-semibold">UPDATE A LISTING</h1>
             <form action=""></form>
             <div className="grid grid-cols-12 max-w-3xl mx-auto gap-3">
                 <div className="col-span-6 flex flex-col gap-2 ">
@@ -207,7 +232,7 @@ export const CreateListing = () => {
                                 min={0}
                                 required
                                 onChange={handleChange}
-                                // value={formData.bedrooms}
+                                value={formData.bedrooms}
                             />
                             <span className="text-slate-500">Beds</span>
                         </div>
@@ -219,13 +244,13 @@ export const CreateListing = () => {
                                 min={0}
                                 required
                                 onChange={handleChange}
-                                // value={formData.bathrooms}
+                                value={formData.bathrooms}
                             />
                             <span className="text-slate-500">Baths</span>
                         </div>
                     </div>
                     <div className="flex gap-2">
-                        <input type="text" className="w-1/2 bg-slate-100 border-2 border-slate-200 rounded-lg px-4 py-2 focus:outline-none focus:border-slate-400" placeholder="Price" id="regularPrice" />
+                        <input type="text" className="w-1/2 bg-slate-100 border-2 border-slate-200 rounded-lg px-4 py-2 focus:outline-none focus:border-slate-400" placeholder="Price" id="regularPrice" value={formData.regularPrice} onChange={handleChange} />
                         <div className="flex flex-col">
                             <h1>Regular Price</h1>
                             <p>($ / Month)</p>
@@ -234,7 +259,7 @@ export const CreateListing = () => {
                     {
                     formData.offer && (
                         <div className="flex gap-2">
-                            <input type="text" className="w-1/2 bg-slate-100 border-2 border-slate-200 rounded-lg px-4 py-2 focus:outline-none focus:border-slate-400" placeholder="Price" id="discountedPrice" />
+                            <input type="text" className="w-1/2 bg-slate-100 border-2 border-slate-200 rounded-lg px-4 py-2 focus:outline-none focus:border-slate-400" placeholder="Price" id="discountPrice" value={formData.discountPrice} onChange={handleChange} />
                             <div className="flex flex-col">
                                 <h1>Discounted Price</h1>
                                 <p>($ / Month)</p>
@@ -275,7 +300,7 @@ export const CreateListing = () => {
                     </div>
                     <div>
                         <button className="border-2 border-gray-300 p-2 w-full rounded-md bg-blue-950 text-white" onClick={handleSubmit} >
-                            {loading ? 'Creating...' : 'Create Listing'}
+                            {loading ? 'Submitting...' : 'Editing Listing'}
                         </button>
                     </div>
                     <div>
@@ -284,5 +309,5 @@ export const CreateListing = () => {
                 </div>
             </div>
         </div>
-    )
+        )
 }

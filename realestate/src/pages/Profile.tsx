@@ -9,6 +9,9 @@ export const Profile = ()=>{
     const [fromData , setFormData] = useState({});
     const [error , setError] = useState(null);
     const [updateSuccess , setUpdateSuccess] = useState(null);
+    const [listing , setListing] = useState([]);
+    const [showListing , setShowListing] = useState(false);
+    const [showListingError , setShowListingError] = useState("");
     const navigate = useNavigate();
     const handleonChange = (e:any)=>{
         setFormData({...fromData,[e.target.id]: e.target.value})
@@ -64,6 +67,65 @@ export const Profile = ()=>{
             
         }
     }
+    const handleShowListing = async ()=>{
+        try {
+            const res = await axios.get(`http://localhost:3000/user/listing/${currentuser?._id}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+                },
+            }
+            );
+            console.log(res.data);
+            if (res.data.success === false) {
+                setShowListingError(res.data.message);
+            }
+            setListing(res.data.data);
+            setShowListingError("");
+        } catch (error : any) {
+            setShowListingError(error);
+        }
+    }
+    const handleListingDelete = async (id:string)=>{
+        try {
+            const res = await axios.delete(`http://localhost:3000/listing/delete/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+                },
+            })
+            console.log(res.data);
+            if (res.data.success === false) {
+                setError(res.data.message);
+            }
+            setUpdateSuccess(res.data.message);
+            setError(null);
+            setTimeout(()=>{
+                setUpdateSuccess(null)
+            }, 3000);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    const handleListingUpdate = async (id:string)=>{
+        try {
+            const res = await axios.post(`http://localhost:3000/listing/update/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+                },
+            })
+            console.log(res.data);
+            if (res.data.success === false) {
+                setError(res.data.message);
+            }
+            setUpdateSuccess(res.data.message);
+            setError(null);
+            setTimeout(()=>{
+                setUpdateSuccess(null)
+            }, 3000);
+        } catch (error) {
+            console.log(error);
+        }
+    }
      return (
         <div className="p-3 max-w-lg mx-auto">
             <h1 className='text-3xl font-semibold text-center my-7'>Profile</h1>
@@ -113,7 +175,50 @@ export const Profile = ()=>{
                 {updateSuccess ? 'User is updated successfully!' : ''}
             </p>
             
-            <button className='text-green-700 w-full'> Show Listings</button>
+            <button className='text-green-700 w-full' onClick={()=>{
+                handleShowListing();
+                setShowListing(!showListing);
+            }}> {showListing ? 'Hide Listings' : 'Show Listings'}</button>
+            {showListing && <div>
+                <p className='text-red-700'>{showListingError ? showListingError : ''}</p>
+                {
+                    listing && listing.length > 0 ? (
+                        <div>
+                            <h1 className='text-3xl font-semibold text-center my-7'>Your Listings</h1>
+                            {
+                                listing.map((item: any , index : number) => (
+                                    <div key={index} className='flex justify-between p-3 border items-center'>
+                                        <div className="flex gap-3 items-center">
+                                            <img
+                                            src={item.imageUrls}
+                                            alt='listing image'
+                                            className='w-20 h-20 object-contain rounded-lg'
+                                            />
+                                            <p className='text-lg font-semibold'>{item.name}</p>
+                                        </div>
+                                        <div className="flex flex-col items-center">
+                                            <button
+                                            type='button'
+                                            onClick={() => handleListingDelete(item._id)}
+                                            className='p-3 text-red-700 rounded-lg uppercase hover:opacity-75'
+                                            >
+                                            Delete
+                                            </button>
+                                            <button
+                                            type='button'
+                                            onClick={() => navigate(`/update-listing/${item._id}`)}
+                                            className='p-3 text-green-700 rounded-lg uppercase hover:opacity-75'
+                                            >
+                                            Edit
+                                            </button>
+                                        </div>
+                                </div>
+                                ))
+                            }
+                        </div>
+                    ) : null
+                } 
+            </div>}
         </div>
     )
 }   

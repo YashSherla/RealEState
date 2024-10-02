@@ -95,7 +95,7 @@ router.get('/listing/:id',verifyToken, async (req, res) => {
     if (req.user.id !== req.params.id) {
         return res.status(401).json({
             success: false,
-            message: "You can only view your own account!"
+            message: "You can only view your own Listing!"
         })
     }
     try {

@@ -21,3 +21,18 @@ export const getUserAtom = atomFamily({
         },
     })
 })
+export const getListingAtomFamily = atomFamily({
+    key: "getListingAtomFamily",
+    default: selectorFamily({
+        key: "getListingSelectorFamily",
+        get: (id: string) => async () => {
+            try {
+                const res = await axios.get("http://localhost:3000/listing/get/"+id);
+                return res.data.data;
+            } catch (error) {
+                console.log(error);
+                return null;
+            }
+        },
+    })
+})

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Search } from "./Search";
+import { Search } from "./SearchComp";
 import { userAtom } from "../store/userAtom";
 import { useRecoilValue } from "recoil";
 import { UserProfile } from "../types/types";
@@ -10,10 +10,10 @@ export const Navbar = () => {
     return (
         <header className='bg-slate-200 shadow-md'>
             <div className='flex justify-between items-center max-w-6xl mx-auto p-3'>
-                <h1 className='font-bold text-sm sm:text-xl flex flex-wrap'>
+                <a className='font-bold text-sm sm:text-xl flex flex-wrap' href="/">
                     <span className='text-slate-500'>Yash</span>
                     <span className='text-slate-700'>Estate</span>
-                </h1>
+                </a>
                 <Search />
                 <ul className='flex gap-4'>
                     <Link to='/'>

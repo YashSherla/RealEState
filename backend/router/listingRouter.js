@@ -97,7 +97,7 @@ router.delete('/delete/:id',verifyToken, async (req, res) => {
     if (req.user.id !== listing.userRef) {
         return res.status(401).json({
             success: false,
-            message: "You can only update your own listing!",
+            message: "You can only delete your own listing!",
         })
     }
     try {
