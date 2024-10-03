@@ -1,6 +1,7 @@
 import { FaMapMarkerAlt } from "react-icons/fa"
+import { Link } from "react-router-dom";
 type Listing = {
-    id: string;
+    _id: string;
     name: string;
     description: string;
     address: string;
@@ -15,8 +16,9 @@ type Listing = {
     imageUrls:string[];
     userRef:string;
 }
-export const ListingComp = (list:Listing) => {
+export const ListingComp = (list: Listing) => {
     return (
+    <Link to={`/listing/${list._id}`}>
         <div  className="bg-white shadow-md hover:shadow-lg transition-shadow overflow-hidden rounded-lg p-3 space-y-2">
                 <img src={list.imageUrls[0]} className="h-[200px] sm:h-[180px] w-full object-cover hover:scale-105 transition-transform duration-300" />
                 <h1 className="font-semibold line-clamp-1">{list.name}</h1>
@@ -41,5 +43,6 @@ export const ListingComp = (list:Listing) => {
                     }
                 </div>
             </div>
+    </Link>
     )
 }

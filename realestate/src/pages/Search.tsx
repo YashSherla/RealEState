@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { ListingComp } from "../components/ListingComp";
 
 type Listing = {
-    id: string;
+    _id: string;
     name: string;
     description: string;
     address: string;
