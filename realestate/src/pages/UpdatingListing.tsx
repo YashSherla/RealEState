@@ -143,7 +143,7 @@ export const UpdatingListing = () => {
         <div className="text-center mt-4">
             <h1 className="text-3xl font-semibold">UPDATE A LISTING</h1>
             <form action=""></form>
-            <div className="grid grid-cols-12 max-w-3xl mx-auto gap-3">
+            <div className="col-span-12 p-3 lg:grid grid-cols-12 max-w-3xl mx-auto gap-3">
                 <div className="col-span-6 flex flex-col gap-2 ">
                     <div className="flex flex-col gap-3">
                         <input 
@@ -267,7 +267,7 @@ export const UpdatingListing = () => {
                         </div> )
                     }
                 </div>
-                <div className="col-span-6 flex flex-col gap-3">
+                <div className=" col-span-12 p-3 lg:col-span-6 flex flex-col gap-3">
                     <div className="flex">
                         <p><b>Images:</b>The first image will be the cover (max 6)</p>
                     </div>

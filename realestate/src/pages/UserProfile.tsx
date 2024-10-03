@@ -216,7 +216,7 @@ export const Profile = ()=>{
                                 ))
                             }
                         </div>
-                    ) : null
+                    ) : <p>No listings</p>
                 } 
             </div>}
         </div>

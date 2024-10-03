@@ -10,7 +10,7 @@ export const Navbar = () => {
     return (
         <header className='bg-slate-200 shadow-md'>
             <div className='flex justify-between items-center max-w-6xl mx-auto p-3'>
-                <a className='font-bold text-sm sm:text-xl flex flex-wrap' href="/">
+                <a className='font-bold text-sm  sm:text-xl flex flex-wrap' href="/">
                     <span className='text-slate-500'>Yash</span>
                     <span className='text-slate-700'>Estate</span>
                 </a>

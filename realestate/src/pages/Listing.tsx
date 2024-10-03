@@ -2,12 +2,11 @@ import { useParams } from 'react-router-dom';
 import { useRecoilValueLoadable } from 'recoil';
 import { getUserAtom } from '../store/userAtom';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import 'swiper/css'; // Import the necessary Swiper CSS
-import 'swiper/css/navigation'; // Import navigation styles if needed
-import 'swiper/css/pagination'; // Import pagination styles if needed
+import 'swiper/css'; 
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 import { Navigation, Pagination } from 'swiper/modules';
 import { FaBath, FaBed, FaChair, FaMapMarkerAlt, FaParking } from 'react-icons/fa';
-
 export const Listing = () => {
     const params = useParams();
     const userAtom = useRecoilValueLoadable(getUserAtom(params.id as string));

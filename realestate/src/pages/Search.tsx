@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { FaMapMarkerAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { ListingComp } from "../components/ListingComp";
 
 type Listing = {
     id: string;
@@ -101,7 +101,7 @@ export const Search = () =>{
     }
     return (
         <div className="grid grid-cols-12 h-screen">
-            <div className="col-span-4 p-4 space-y-6 border-r-2 ">
+            <div className="hidden lg:block sm:col-span-4 p-4 space-y-6 border-r-2">
                 <div className="flex">
                     <label htmlFor="" className="text-slate-700">Search Term:</label>
                     <input type="text" className=" bg-slate-100 border border-gray-300 rounded-md w-full p-3" id="searchTerm" value={sidebardata.searchTerm} onChange={handleChange}/>
@@ -192,45 +192,21 @@ export const Search = () =>{
                     >Search</button>
                 </div>
             </div>
-
-            <div className="col-span-8 p-3">
-            <h1 className='text-3xl font-semibold border-b p-3 text-slate-700 mt-5'>Listing results:</h1>
-            {
-                loading ? <p>Loading....</p> : error ? <p>{error}</p>: (
-                    listing.length  > 0 ? (
-                        <div className="flex space-x-2">
-                            {listing.map((list:Listing,index:number)=>{
+            <div className="col-span-12 lg:col-span-8 p-3 flex flex-col  w-full">
+                <h1 className='text-3xl font-semibold border-b p-3 text-slate-700 mt-5'>Listing results:</h1>
+                    {
+                        loading ? <p>Loading....</p> : error ? <p>{error}</p> : (
+                        listing.length > 0 ? (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                            {listing.map((list: Listing, index: number) => {
                                 return (
-                                    <div key={index} className="bg-white shadow-md hover:shadow-lg transition-shadow overflow-hidden rounded-lg w-full p-3 sm:w-[330px] space-y-2">
-                                       <img src={list.imageUrls[0]} className="h-[320px] sm:h-[220px] w-full object-cover hover:scale-105 transition-scale duration-300" />
-                                       <h1 className="font-semibold">{list.name}</h1>
-                                       <div className="flex gap-1">
-                                        <FaMapMarkerAlt className="text-red-500" />
-                                        <p className="text-sm">{list.address}</p>
-                                       </div>
-                                       <p className="text-sm">{list.description}</p>
-                                       <div>
-                                       $
-                                        {list.offer
-                                        ? list.discountPrice?.toLocaleString('en-US')
-                                        : list.regularPrice.toLocaleString('en-US')}
-                                        {list.type === 'rent' && ' / month'}
-                                       </div>
-                                       <div className="flex gap-3">
-                                        {
-                                            list.bedrooms > 1 ? <p className="font-semibold">{list.bedrooms}Beds</p>:<p className="font-semibold">{list.bedrooms}Bed</p>
-                                        }
-                                        {
-                                            list.bathrooms > 1 ? <p className="font-semibold">{list.bathrooms}Baths</p>:<p className="font-semibold">{list.bathrooms}Bath</p>
-                                        }
-                                       </div>
-                                    </div>
+                                    <ListingComp key={index} {...list}  />
                                 )
                             })}
                         </div>
-                    ): <p>No Listing Found</p>
+                    ) : <p>No Listings Found</p>
                 )
-            }
+            }   
             </div>
         </div>
     )

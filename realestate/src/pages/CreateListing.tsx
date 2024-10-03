@@ -119,7 +119,7 @@ export const CreateListing = () => {
             <h1 className="text-3xl font-semibold">CREATE A LISTING</h1>
             <form action=""></form>
             <div className="grid grid-cols-12 max-w-3xl mx-auto gap-3">
-                <div className="col-span-6 flex flex-col gap-2 ">
+                <div className="col-span-12 p-5  lg:col-span-6 flex flex-col gap-2 ">
                     <div className="flex flex-col gap-3">
                         <input 
                         type="text"
@@ -242,7 +242,7 @@ export const CreateListing = () => {
                         </div> )
                     }
                 </div>
-                <div className="col-span-6 flex flex-col gap-3">
+                <div className="col-span-12 p-5 lg:col-span-6 flex flex-col gap-3">
                     <div className="flex">
                         <p><b>Images:</b>The first image will be the cover (max 6)</p>
                     </div>
