@@ -7,14 +7,14 @@ export const Search = () => {
     const navigate = useNavigate();
     const handleSummit = (e:any) =>{
         e.preventDefault();
-        const param = new  URLSearchParams(window.location.search);
+        const param = new  URLSearchParams(location.search);
         // console.log(`location.search: ${location.search}`);
-        param.set('search', searchTerm);
+        param.set('searchTerm', searchTerm);
         navigate(`/search?${param.toString()}`);
     }
     useEffect(()=>{
         const param = new URLSearchParams(location.search);
-        setSearchTerm(param.get('search')||'');
+        setSearchTerm(param.get('searchTerm') || "");
     },[location.search])
     return (
         <form className="bg-slate-100 p-3 rounded-lg flex items-center">
