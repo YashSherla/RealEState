@@ -242,9 +242,9 @@ export const CreateListing = () => {
                         </div> )
                     }
                 </div>
-                <div className="col-span-12 p-5 lg:col-span-6 flex flex-col gap-3">
+                <div className="col-span-12 p-5 lg:col-span-6 flex flex-col gap-3 ">
                     <div className="flex">
-                        <p><b>Images:</b>The first image will be the cover (max 6)</p>
+                        <p ><b>Images:</b>The first image will be the cover (max 6)</p>
                     </div>
                     <div className="flex gap-3">
                         <input type="file" multiple className="w-full bg-slate-100 border-2 border-slate-200 rounded-lg px-4 py-2 focus:outline-none focus:border-slate-400" onChange={(e:any) => setFiles(e.target.files)}/>

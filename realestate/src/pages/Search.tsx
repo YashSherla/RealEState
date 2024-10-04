@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ListingComp } from "../components/ListingComp";
+import { FilterModel } from "../components/FilterModel";
 
 type Listing = {
     _id: string;
@@ -24,6 +25,7 @@ export const Search = () =>{
     const [listing , setListing] = useState<Listing[]>([]);
     const [error, setError] = useState("");
     const navigate = useNavigate();
+    const [visibleSidebar,setVisibleSidebar] = useState(false);
     const [sidebardata, setSidebardata] = useState({
         searchTerm: '',
         type: 'all',
@@ -86,8 +88,8 @@ export const Search = () =>{
             setSidebardata({...sidebardata,sort,order})
         }
     }
-    const handleSubmit = (e : any) => {
-        e.preventDefault();
+    const handleSubmit = () => {
+        // e.preventDefault();
         const urlParams = new URLSearchParams();
         urlParams.set('searchTerm',sidebardata.searchTerm);
         urlParams.set('type',sidebardata.type);
@@ -99,6 +101,10 @@ export const Search = () =>{
         const searchQuery = urlParams.toString();
         navigate(`/search?${searchQuery}`)
     }
+    const toggleSidebar = () => {
+        setVisibleSidebar(!visibleSidebar)
+    };
+    
     return (
         <div className="grid grid-cols-12 h-screen">
             <div className="hidden lg:block sm:col-span-4 p-4 space-y-6 border-r-2">
@@ -193,7 +199,10 @@ export const Search = () =>{
                 </div>
             </div>
             <div className="col-span-12 lg:col-span-8 p-3 flex flex-col  w-full">
-                <h1 className='text-3xl font-semibold border-b p-3 text-slate-700 mt-5'>Listing results:</h1>
+                <div className="flex justify-between items-center">
+                    <h1 className='text-3xl font-semibold border-b p-3 text-slate-700 mt-5'>Listing results:</h1>
+                    <FilterModel isOpen={visibleSidebar} onClose={toggleSidebar} handleChange={handleChange} sidebardata={sidebardata} handleSubmit={handleSubmit}  ></FilterModel>             
+                </div>
                     {
                         loading ? <p>Loading....</p> : error ? <p>{error}</p> : (
                         listing.length > 0 ? (
