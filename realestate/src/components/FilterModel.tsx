@@ -22,7 +22,7 @@ export const FilterModel: React.FC<FilterModelProps> = ({ isOpen, onClose , hand
    if (!isMoible) return null;
    return (
    <div>
-      <button onClick={onClose} className="mt-6"><FaFilter className="text-xl text-red-400"></FaFilter></button>
+      <button onClick={onClose} className="mt-6"><FaFilter className="text-xl text-blue-500"></FaFilter></button>
       <div
       className={`fixed inset-x-0 bottom-0 transition-transform transform bg-white shadow-lg border-2 p-4 space-y-4 rounded-2xl ${
       isOpen ? 'translate-y-0 duration-500' : 'translate-y-full duration-500'}`}

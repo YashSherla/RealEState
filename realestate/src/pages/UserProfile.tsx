@@ -1,10 +1,12 @@
 import { useRecoilValue } from "recoil";
 import { userAtom } from "../store/userAtom";
-import {  useState } from "react";
+import {  useRef, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 
 export const Profile = ()=>{
+    const fileRef = useRef<HTMLInputElement | null>(null);
+    // const [file,setfile]= useState("");
     const currentuser = useRecoilValue(userAtom);
     const [fromData , setFormData] = useState({});
     const [error , setError] = useState(null);
@@ -64,7 +66,6 @@ export const Profile = ()=>{
             }
         } catch (error: any) {
             console.error('Error updating user:', error.response ? error.response.data : error.message);
-            
         }
     }
     const handleShowListing = async ()=>{
@@ -106,32 +107,22 @@ export const Profile = ()=>{
             console.log(error);
         }
     }
-    const handleListingUpdate = async (id:string)=>{
-        try {
-            const res = await axios.post(`http://localhost:3000/listing/update/${id}`, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-                },
-            })
-            console.log(res.data);
-            if (res.data.success === false) {
-                setError(res.data.message);
-            }
-            setUpdateSuccess(res.data.message);
-            setError(null);
-            setTimeout(()=>{
-                setUpdateSuccess(null)
-            }, 3000);
-        } catch (error) {
-            console.log(error);
-        }
-    }
      return (
         <div className="p-3 max-w-lg mx-auto">
             <h1 className='text-3xl font-semibold text-center my-7'>Profile</h1>
             {/* <form onSubmit={handleSubmit} className="flex flex-col items-center gap-3" > */}
             <div className="flex flex-col items-center gap-3">
-                <img src= {currentuser?.avatar} alt='profile'className='rounded-full h-24 w-24 object-cover cursor-pointer self-center mt-2'/>
+                <div>
+                    <input type="file" hidden ref={fileRef} onChange={(e)=>{
+                        console.log(e.target.files![0]);
+                    }} accept='image/*'/>
+                    <img 
+                    src= {currentuser?.avatar} 
+                    alt='profile'
+                    className='rounded-full h-24 w-24 object-cover cursor-pointer self-center mt-2'
+                    onClick={()=>fileRef.current!.click()}
+                    />
+                </div>
                 {/* <p className='text-sm self-center'>
                     {fileUploadError ? (
                         <span className='text-red-700'>
@@ -174,7 +165,6 @@ export const Profile = ()=>{
             <p className='text-green-700 mt-5'>
                 {updateSuccess ? 'User is updated successfully!' : ''}
             </p>
-            
             <button className='text-green-700 w-full' onClick={()=>{
                 handleShowListing();
                 setShowListing(!showListing);

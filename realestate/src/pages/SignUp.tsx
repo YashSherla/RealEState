@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
+import { GoogleAuth } from "../components/GoogleAuth";
 
 export const Signup = ()=>{
    const [fromdata, setFormData] = useState({})
@@ -40,8 +41,10 @@ export const Signup = ()=>{
                 <input type="text" className="border-2 border-gray-300 p-2 w-full rounded-md" placeholder="Username" onChange={handleChange} id="username" required={true} />
                 <input type="text" className="border-2 border-gray-300 p-2 w-full rounded-md" placeholder="Email" onChange={handleChange} id="email" required={true}/>
                 <input type="text" className="border-2 border-gray-300 p-2 w-full rounded-md" placeholder="Password" onChange={handleChange} id="password" required={true}/>
-                <button className="border-2 border-gray-300 p-2 w-full rounded-md bg-blue-950 text-white" onClick={handleSummit}>{loading ? "Loading..." : "SIGN UP"}</button>
-                <button className="border-2 border-gray-300 p-2 w-full rounded-md  bg-red-500 text-white">CONTINUE WITH GOOGLE</button>
+                <div className="my-4">
+                    <button className="border-2 border-gray-300 p-2 w-full rounded-md bg-blue-950 text-white" onClick={handleSummit}>{loading ? "Loading..." : "SIGN UP"}</button>
+                    <GoogleAuth />
+                </div>
             </div>
             <div className='flex gap-2 mt-5'>
                 <p>Have an account?</p>

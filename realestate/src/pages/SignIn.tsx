@@ -3,6 +3,7 @@ import { useEffect, useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import {  useSetRecoilState } from "recoil";
 import { userAtom } from "../store/userAtom";
+import { GoogleAuth } from "../components/GoogleAuth";
 
 export const SignIn = ()=>{
    const [fromdata, setFormData] = useState({})
@@ -53,11 +54,9 @@ export const SignIn = ()=>{
                 <input type="text" className="border-2 border-gray-300 p-2 w-full rounded-md" placeholder="Password" onChange={handleChange} id="password"/>
             </div>
             <div className="my-4">
-                <button className="border-2 border-gray-300 p-2 w-full rounded-md bg-blue-950 text-white" onClick={handleSummit}>{loading ? "Loading..." : "SIGN UP"}</button>
+                <button className="border-2 border-gray-300 p-2 w-full rounded-md bg-blue-950 text-white" onClick={handleSummit}>{loading ? "Loading..." : "SIGN IN"}</button>
             </div>
-            <div className="my-4">
-                <button className="border-2 border-gray-300 p-2 w-full rounded-md  bg-red-500 text-white">CONTINUE WITH GOOGLE</button>
-            </div>
+            <GoogleAuth/>
             <div className='flex gap-2 mt-5'>
                 <p>Don't have an account?</p>
                 <Link to={'/sign-up'}>

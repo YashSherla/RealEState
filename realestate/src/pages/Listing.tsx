@@ -23,7 +23,7 @@ export const Listing = () => {
                     pagination={{ clickable: true }}
                     spaceBetween={50}
                     slidesPerView={1}
-                    style={{ height: '550px' }} // Set a fixed height for the Swiper
+                    style={{ height: '550px' }}
                 >
                     {
                         userAtom.contents.imageUrls.map((url: string, index: number) => (
@@ -33,7 +33,7 @@ export const Listing = () => {
                                     style={{
                                         background: `url(${url}) center no-repeat`,
                                         backgroundSize: 'cover',
-                                        height: '100%', // Make sure the slide takes full height
+                                        height: '100%',
                                     }}
                                 ></div>
                             </SwiperSlide>
@@ -66,19 +66,19 @@ export const Listing = () => {
                     </div>
                     <div>
                         <ul className='flex items-center gap-4'>
-                            <li className='flex items-center gap-1'>
+                            <li className='sm:flex items-center gap-1'>
                                 <FaBed className='text-lg' />
                                 <p>{userAtom.contents.bedrooms} Bedrooms</p>
                             </li>
-                            <li className='flex items-center gap-1'>
+                            <li className='sm:flex items-center gap-1'>
                                 <FaBath className='text-lg' />
                                 <p>{userAtom.contents.bathrooms} Bathrooms</p>
                             </li>
-                            <li className='flex items-center gap-1'>
+                            <li className='sm:flex items-center gap-1'>
                                 <FaParking className='text-lg' />
                                 <p>{userAtom.contents.parking} Parking</p>
                             </li>
-                            <li className='flex items-center gap-1'>
+                            <li className='sm:flex items-center gap-1'>
                                 <FaChair className='text-lg' />
                                 <p>{userAtom.contents.furnished} Furnished</p>
                             </li>

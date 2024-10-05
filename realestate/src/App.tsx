@@ -15,7 +15,7 @@ import { Listing } from './pages/Listing'
 import { UpdatingListing } from './pages/UpdatingListing'
 import { Search } from './pages/Search'
 
-const AppwithState = () =>{
+const AppwithState = () => {
  const setStoreProfile  = useSetRecoilState(userAtom);
  const userProfile = useRecoilValue(userAtom);
  const [loading, setLoading] = useState(true);
