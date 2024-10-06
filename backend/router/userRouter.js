@@ -2,7 +2,7 @@ const express = require('express');
 const verifyToken = require('../middelware/verifyToken');
 const bcryptjs = require('bcryptjs');
 const { User, Listing } = require('../db/db');
-const  z  = require('zod');
+const z = require('zod');
 const router = express.Router();
 const updateBody = z.object({
     username: z.string().optional(),
@@ -10,7 +10,7 @@ const updateBody = z.object({
     password: z.string().min(6).optional(),
     avatar: z.string().optional(),
 })
-router.post('/update/:id',verifyToken, async (req, res) => {
+router.post('/update/:id', verifyToken, async (req, res) => {
     if (req.user.id !== req.params.id) {
         return res.status(401).json({
             success: false,
@@ -28,18 +28,18 @@ router.post('/update/:id',verifyToken, async (req, res) => {
         if (body.data.password) {
             body.data.password = bcryptjs.hashSync(body.data.password, 10);
         }
-        const update = await User.findByIdAndUpdate(req.params.id,body.data,{new: true});
+        const update = await User.findByIdAndUpdate(req.params.id, body.data, { new: true });
         if (!update) {
             return res.status(404).json({
                 success: false,
                 message: "User not found",
             })
         }
-        const {password:pass,...others} = update._doc;
+        const { password: pass, ...others } = update._doc;
         return res.status(200).json({
             success: true,
             message: "User updated successfully",
-            data: others
+            user: others
         })
     } catch (error) {
         return res.status(500).json({
@@ -48,7 +48,7 @@ router.post('/update/:id',verifyToken, async (req, res) => {
         })
     }
 })
-router.delete('/delete/:id',verifyToken, async (req, res) => {
+router.delete('/delete/:id', verifyToken, async (req, res) => {
     if (req.user.id !== req.params.id) {
         return res.json({
             success: false,
@@ -68,7 +68,7 @@ router.delete('/delete/:id',verifyToken, async (req, res) => {
         })
     }
 })
-router.get('/:id',verifyToken, async (req, res) => {
+router.get('/:id', verifyToken, async (req, res) => {
     if (req.user.id !== req.params.id) {
         return res.status(401).json({
             success: false,
@@ -77,13 +77,13 @@ router.get('/:id',verifyToken, async (req, res) => {
     }
     try {
         const user = await User.findById(req.params.id);
-        const {password:pass,...others} = user._doc;
+        const { password: pass, ...others } = user._doc;
         return res.status(200).json({
             success: true,
             message: "User fetched successfully",
             data: others
         })
-        
+
     } catch (error) {
         return res.json({
             success: false,
@@ -91,7 +91,7 @@ router.get('/:id',verifyToken, async (req, res) => {
         })
     }
 })
-router.get('/listing/:id',verifyToken, async (req, res) => {
+router.get('/listing/:id', verifyToken, async (req, res) => {
     if (req.user.id !== req.params.id) {
         return res.status(401).json({
             success: false,
@@ -99,7 +99,7 @@ router.get('/listing/:id',verifyToken, async (req, res) => {
         })
     }
     try {
-        const user = await Listing.find({userRef: req.params.id});
+        const user = await Listing.find({ userRef: req.params.id });
         return res.status(200).json({
             success: true,
             message: "User fetched successfully",

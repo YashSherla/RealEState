@@ -1,14 +1,23 @@
 import { useRecoilValue } from "recoil";
 import { userAtom } from "../store/userAtom";
-import {  useRef, useState } from "react";
+import {  useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
-
-export const Profile = ()=>{
+import { getDownloadURL, getStorage, ref, uploadBytesResumable } from "firebase/storage";
+import { app } from "../firebase";
+ 
+type UserProfileData = {
+    avatar?: string;
+    Username?: string;
+    Email?: string;
+    Password?: string | number;
+}
+export const Profile = () => {
     const fileRef = useRef<HTMLInputElement | null>(null);
-    // const [file,setfile]= useState("");
+    const [file , setfile] = useState(undefined);
+    const [uploadPerc, setUploadPerc] = useState(0)
     const currentuser = useRecoilValue(userAtom);
-    const [fromData , setFormData] = useState({});
+    const [fromData, setFormData] = useState<UserProfileData>({});
     const [error , setError] = useState(null);
     const [updateSuccess , setUpdateSuccess] = useState(null);
     const [listing , setListing] = useState([]);
@@ -17,6 +26,29 @@ export const Profile = ()=>{
     const navigate = useNavigate();
     const handleonChange = (e:any)=>{
         setFormData({...fromData,[e.target.id]: e.target.value})
+    }
+    useEffect(() => {
+        if (file) {
+            handleProfile(file)
+        }
+    },[file])
+    const handleProfile = (file: any) => {
+        const storage = getStorage(app);
+        const fileName = new Date().getTime() + file.name
+        const storageRef = ref(storage, fileName);
+        const uploadTask = uploadBytesResumable(storageRef, file);
+        uploadTask.on('state_changed', (snapshot) => {
+            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            setUploadPerc(Math.round(progress));
+        }, (error) => {
+            console.log(error);
+        }, () => {
+            getDownloadURL(uploadTask.snapshot.ref).then((downloadUrl) => {
+                console.log(downloadUrl);
+                setFormData({...fromData,avatar:downloadUrl})
+            })
+        })
+
     }
     const handleSubmit = async () => {
         try {
@@ -28,7 +60,8 @@ export const Profile = ()=>{
             console.log(res.data);
             if (res.data.success === false) {
                 setError(res.data.message);
-            }else{
+            } else {
+                localStorage.setItem("user_data", JSON.stringify(res.data.user));
                 setUpdateSuccess(res.data.message);
                 setError(null);
                 setTimeout(()=>{
@@ -113,11 +146,9 @@ export const Profile = ()=>{
             {/* <form onSubmit={handleSubmit} className="flex flex-col items-center gap-3" > */}
             <div className="flex flex-col items-center gap-3">
                 <div>
-                    <input type="file" hidden ref={fileRef} onChange={(e)=>{
-                        console.log(e.target.files![0]);
-                    }} accept='image/*'/>
+                    <input type="file"  hidden ref={fileRef} onChange={(e:any)=>setfile(e.target.files[0])} accept='image/*'/>
                     <img 
-                    src= {currentuser?.avatar} 
+                    src= {fromData.avatar||currentuser?.avatar} 
                     alt='profile'
                     className='rounded-full h-24 w-24 object-cover cursor-pointer self-center mt-2'
                     onClick={()=>fileRef.current!.click()}
